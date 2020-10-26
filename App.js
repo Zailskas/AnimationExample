@@ -39,7 +39,7 @@ class App extends Component {
       duration: 4000,
       easing: Easing.linear,
       useNativeDriver: false,
-    }).start();
+    }).start(() => this.startAnimation());
   };
   render() {
     const left1 = this.state.animatedValue.interpolate({
