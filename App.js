@@ -14,14 +14,67 @@ import {
   View,
   Text,
   Dimensions,
+  Animated,
+  Easing,
 } from 'react-native';
 const {width, height} = Dimensions.get('window');
 const cloudWidth = 60;
 class App extends Component {
+  state = {
+    fadeSun: new Animated.Value(0),
+    animatedValue: new Animated.Value(0),
+  };
+  fadeSunIN = () => {
+    Animated.timing(this.state.fadeSun, {
+      toValue: 1,
+      duration: 3000,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  startAnimation = () => {
+    this.state.animatedValue.setValue(0);
+    Animated.timing(this.state.animatedValue, {
+      toValue: 1,
+      duration: 4000,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start();
+  };
   render() {
+    const left1 = this.state.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-cloudWidth, width],
+    });
+    const left2 = this.state.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-cloudWidth * 5, width + cloudWidth * 5],
+    });
     return (
       <View>
-        <Text>Hi</Text>
+        <View>
+          <Text>Hello</Text>
+          <Button title="SUN" onPress={this.fadeSunIN} />
+          <Animated.Image
+            style={[styles.logo, {opacity: this.state.fadeSun}]}
+            source={require('./src/images/sun.png')}
+          />
+          <Button title="Animation" onPress={this.startAnimation} />
+        </View>
+        <View>
+          <Animated.Image
+            style={[styles.cloud1, {left: left1}]}
+            source={require('./src/images/cloud.png')}
+          />
+          <Animated.Image
+            style={[styles.cloud2, {left: left2}]}
+            source={require('./src/images/sun.png')}
+          />
+          <Image
+            style={[styles.plane]}
+            source={require('./src/images/plane.png')}
+          />
+        </View>
       </View>
     );
   }
